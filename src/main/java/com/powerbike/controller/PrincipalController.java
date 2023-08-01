@@ -12,7 +12,6 @@ public class PrincipalController {
     @GetMapping("/hello")
     public String hello(){
         return "Hello World NOT SECURED";
-
     }
 
     @GetMapping("/helloSecured")

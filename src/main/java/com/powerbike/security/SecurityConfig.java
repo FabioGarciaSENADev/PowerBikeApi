@@ -34,7 +34,8 @@ public class SecurityConfig {
 
     //Con este bean configuramos la seguridad de la aplicacion
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
+                                            AuthenticationManager authenticationManager) throws Exception {
 
         //Agregamos nuestro filtro, como se necesita agregar parametro no lo podemos manejar como un bean
         JwtAuthenticationFilter jwtAuthenticationFilter =new JwtAuthenticationFilter(jwtUtils);
