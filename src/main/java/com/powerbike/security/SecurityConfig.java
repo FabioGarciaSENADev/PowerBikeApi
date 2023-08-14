@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)  //Habilitamos anotaciones para uso en lso roles de los controladores
@@ -43,9 +44,11 @@ public class SecurityConfig {
         jwtAuthenticationFilter.setFilterProcessesUrl("/login");    //Esta linea se puede omitir ya que viene por defecto
 
         return httpSecurity
-                .csrf(config -> config.disable())
+                .cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
+                .and()
+                .csrf().disable()
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/hello").permitAll();
+                    auth.requestMatchers("/login").permitAll();
                     //Esta es una forma de agregar persmisos por roles, no es la mas optima, con hasany podemos agregar un
                     //arreglo de roles
                     //auth.requestMatchers("/accessAdmin").hasRole("ADMIN");
