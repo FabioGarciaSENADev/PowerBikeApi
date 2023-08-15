@@ -13,12 +13,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Data                       //Agrega todos los setters y getters
-@AllArgsConstructor         //agrega constructor con argumentos
-@NoArgsConstructor          //agreaga constructor sin argumentos
-@Builder
-@Entity                     //Configura la clase como una entidad
-@Table(name = "usuario")      //El nombre de la tabla al momento de la creacion
+@Data                           //Etiqueta para agregar todos los setters y getters
+@AllArgsConstructor             //Etiqueta para agregar constructor con argumentos
+@NoArgsConstructor              //Etiqueta para agreagar constructor sin argumentos
+@Builder                        //Etiqueta para implementra patron de diseño builder
+@Entity                         //Configura la clase como una entidad
+@Table(name = "users")          //Etiqueta para colocar nombre de la tabla al momento de la creacion en BD
 public class UserEntity {
 
     @Id
@@ -27,9 +27,14 @@ public class UserEntity {
 
     @NotBlank
     @Size(max = 30)
-    private String username;
+    private String name;
 
+    @NotBlank
+    @Size(max = 30)
     private String lastname;
+
+    @NotBlank
+    @Size(max = 30)
     private String secondLastname;
 
     @Email
@@ -39,22 +44,39 @@ public class UserEntity {
 
     @NotBlank
     private String password;
+
+    @NotBlank
     private String gender;
+
+    @NotBlank
+    @Size(max = 80)
     private String phoneNumber;
+
+    @NotBlank
+    @Size(max = 80)
     private String address;
+
+    @NotBlank
     private String city;
-    private LocalDateTime creationDate;
+
+
     private LocalDate dateOfBirth;
     /*//Con este metodo debo parsear la fecha de nacimiento ingresado por el usuario
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     LocalDate dateOfBirth = LocalDate.parse(dateOfBirthString, formatter);*/
 
+    @NotBlank
+    private String idCard;
+
+    private LocalDateTime updateDate;
+
+    private boolean activeUser;
 
     //Con este bloque creamos la tabla intermedia ya que es una relacion muchos a muchos, como es una relacion
     //unidirecional solo traemos los registros de roles, la persistencia es PERSIST ya que si se elimina un usuario
     //no debe borrar el registro en roles
     @ManyToMany(fetch = FetchType.EAGER, targetEntity = RoleEntity.class, cascade = CascadeType.PERSIST)
-    @JoinTable(name = "usuarios_roles", joinColumns = @JoinColumn(name = "IdUsuario"), inverseJoinColumns = @JoinColumn(name = "IdRol"))
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "IdUser"), inverseJoinColumns = @JoinColumn(name = "IdRol"))
     private Set<RoleEntity> roles;
 
 }

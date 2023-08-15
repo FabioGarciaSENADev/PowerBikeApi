@@ -29,7 +29,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public JwtAuthenticationFilter(JwtUtils jwtUtils){
         this.jwtUtils = jwtUtils;
     }
-//Esto metodo se realizaara cuando el usuario inyente registrase
+
+    //Esto metodo se realizaara cuando el usuario intente registrase, que se va hacer cuando se intenta autenticar
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
@@ -37,10 +38,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         UserEntity userEntity = null;
         String username = "";
         String password = "";
+
         try{
-            //Con este posemos poblar el objeto UserEntity, si no hay ningun error nos podemos loggear
+            //Utilizamos la libreria de jackson (Spring) para mapear de Json al objeto UserEntity
+            //que viene el request y recuperamos el email(username) y el password
             userEntity = new ObjectMapper().readValue(request.getInputStream(), UserEntity.class);
-            username = userEntity.getUsername();
+            username = userEntity.getEmail();
             password = userEntity.getPassword();
         } catch (StreamReadException e) {
             throw new RuntimeException(e);
@@ -50,10 +53,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             throw new RuntimeException(e);
         }
 
-        //Con esto nos autenticamos
+        //Si el try no da ninguna excepcion podremos autenticarnos
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(username, password);
 
+        //Este es el objeto que se encarga de dar autenticacion, pasamos el objeto autenticationToken que contiene las
+        //las credenciales del ususario
         return getAuthenticationManager().authenticate(authenticationToken);
     }
 
@@ -63,24 +68,26 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
-        //Recuperamos el objeto con los dettales del usuario
+
+        //Utilizamso el User de Spring Recuperamos el objeto que contiene los detalles del usuario
         User user = (User) authResult.getPrincipal();
-        //Procedemos a crear el token con el username del userSpring
+
+        //Procedemos a crear el token con el username del userSpring (por eso no es email de UserEntity)
         String token = jwtUtils.generateAccesToken(user.getUsername());
 
         //En el header de la respuesta se devuelve el token
         response.addHeader("Authorization", token);
 
-        //Mapeamos la respuesta, devolvera el token, un mensaje, y el username al que se le creo el token
+        //Mapeamos la respuesta (response), devolvera el token, un mensaje, y el username al que se le creo el token
         Map<String, Object> httpResponse = new HashMap<>();
-        httpResponse.put("token", token);
         httpResponse.put("Message", "Autenticacion Correcta");
         httpResponse.put("Username", user.getUsername());
+        httpResponse.put("token", token);
 
         //Convertimos la respuesta en Json
         response.getWriter().write(new ObjectMapper().writeValueAsString(httpResponse)); //Convertimos el mapa en Json
         response.setStatus(HttpStatus.OK.value());      //Retorna 200 en la respuesta
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);      //retornara un aplycation/json
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);      //retornara un aplycation/json esto es un Enum
         response.getWriter().flush();       //se genera correctamente la respuesta
 
         super.successfulAuthentication(request, response, chain, authResult);

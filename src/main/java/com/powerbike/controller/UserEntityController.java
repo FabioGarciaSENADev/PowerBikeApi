@@ -1,4 +1,4 @@
-package com.powerbike.controller;
+/*package com.powerbike.controller;
 
 import com.powerbike.models.UserEntity;
 import com.powerbike.service.UserEntityService;
@@ -48,4 +48,4 @@ public class UserEntityController {
         return userEntityService.deleteUser(idUser);
     }
 
-}
+}*/

@@ -1,3 +1,4 @@
+
 package com.powerbike.controller;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,3 +27,4 @@ public class TestRolesController {
         return "Hola, has accedido como ACUDIENTE";
     }
 }
+
