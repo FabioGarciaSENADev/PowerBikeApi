@@ -30,6 +30,14 @@ public class UserDTO {
     @Size(max = 30)
     private String secondLastname;
 
+    @NotBlank
+    @Size(max = 30)
+    private String documentType;
+
+    @NotBlank
+    @Size(max = 30)
+    private String documentNumber;
+
     @Email
     @NotBlank
     @Size(max = 80)

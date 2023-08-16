@@ -47,6 +47,8 @@ public class PrincipalController {
                 .name(userDTO.getName())
                 .lastname(userDTO.getLastname())
                 .secondLastname(userDTO.getSecondLastname())
+                .documentType(userDTO.getDocumentType())
+                .documentNumber(userDTO.getDocumentNumber())
                 .email(userDTO.getEmail())
                 .password(passwordEncoder.encode(userDTO.getPassword()))
                 .gender(userDTO.getGender())
