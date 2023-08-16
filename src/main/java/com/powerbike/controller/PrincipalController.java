@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -67,6 +68,12 @@ public class PrincipalController {
         userRepository.save(userEntity);
 
         return ResponseEntity.ok(userEntity);
+    }
+
+    //Peticion GET Consultar con id
+    @GetMapping("/getUser/{idUser}")
+    public Optional<UserEntity> getClient(@PathVariable("idUser") Long id) {
+        return userRepository.findById(id);
     }
 
     @DeleteMapping("deleteUser/{id}")
